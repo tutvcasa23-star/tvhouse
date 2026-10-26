@@ -1,93 +1,98 @@
 # TV House
 
-Configura los **Android TV / Google TV** de cualquier casa por la red, sin depender de la IA:
-limpieza de apps, inicio limpio estilo Apple TV, fondo y protector de fotos y videos, respaldo y vuelta atrás, y un
-informe de pruebas. La IA solo se usa si aprietas **"Consultar a Claude"** ante un error o una duda.
+[Español](README.es.md) · **English**
 
-Funciona en **Windows y Mac**. Samsung (Tizen), LG (webOS) y otros sistemas: pendiente, ver "Próximos pasos".
+Set up any **Android TV / Google TV** over your home network, no AI required: remove bloatware, get a clean
+Apple TV-style home screen, use your family photos and videos as wallpaper and screensaver, back up and roll back,
+and get a test report. AI is only used if you press **"Consultar a Claude"** (Ask Claude) when something goes wrong.
 
-![Limpieza de un Sony BRAVIA: propone qué desactivar y marca lo más seguro](docs/img/limpieza.png)
+Runs on **Windows and Mac**. The app's interface is in **Spanish**. Samsung (Tizen), LG (webOS) and other systems:
+planned, see "Roadmap".
 
-| Al abrir | Informe de pruebas |
+![Cleaning up a Sony BRAVIA: suggests what to disable and pre-selects the safest items](docs/img/limpieza.png)
+
+| On launch | Test report |
 |---|---|
-| ![Bienvenida con los TV de la red](docs/img/bienvenida.png) | ![Pruebas: Cast, control, espacio e inicio](docs/img/pruebas.png) |
+| ![Welcome screen with the TVs on the network](docs/img/bienvenida.png) | ![Tests: Cast, remote, storage and home screen](docs/img/pruebas.png) |
 
-![Inicio y fotos en modo oscuro: inicio limpio, complementos, fondo y protector con fotos de la familia](docs/img/inicio-oscuro.png)
+![Home & photos in dark mode: clean home screen, add-ons, wallpaper and family photo screensaver](docs/img/inicio-oscuro.png)
 
-*Capturas con datos de ejemplo. La app se pone en modo claro u oscuro sola, según Windows o Mac.*
+*Screenshots use sample data. The app switches between light and dark mode automatically, following Windows or macOS.*
 
-## Instalar
+## Install
 
-1. Python 3.10 o más nuevo ([python.org](https://www.python.org/downloads/)).
-2. Descarga el repo (botón **Code → Download ZIP**, o `git clone`) y, en esa carpeta:
+1. Python 3.10 or newer ([python.org](https://www.python.org/downloads/)).
+2. Download the repo (**Code → Download ZIP**, or `git clone`) and, in that folder:
    - Windows: `powershell -ExecutionPolicy Bypass -File instalar.ps1`
    - Mac: `bash instalar.sh`
 
-   Crea su propio entorno de Python, instala `anthropic`, `pillow` y `pywebview`, baja ADB oficial de Google (verifica la firma en
-   Windows) y **corre las pruebas automáticas**. Si alguna falla, no deja abrir la app.
-3. Abrir:
-   - Windows: ícono **TV House** en el escritorio o el menú Inicio. Abre su **propia ventana** (Edge WebView2, que ya
-     trae Windows 11), sin navegador ni consola. Los botones "Elegir…" abren el explorador para escoger carpetas.
-   - Mac: doble clic en `abrir-tvhouse.command` (ventana propia con WebKit).
-   - Si se prefiere el navegador: `python -m tvcasa --navegador` (queda en `http://127.0.0.1:8765`, solo esta computadora).
+   It creates its own Python environment, installs `anthropic`, `pillow` and `pywebview`, downloads Google's official
+   ADB (verifying its signature on Windows) and **runs the automated tests**. If any test fails, the app won't open.
+3. Open it:
+   - Windows: the **TV House** icon on the desktop or Start menu. It opens in **its own window** (Edge WebView2, built
+     into Windows 11), with no browser or console. The "Elegir…" (Choose…) buttons open a folder picker.
+   - Mac: double-click `abrir-tvhouse.command` (its own WebKit window).
+   - To use a browser instead: `python -m tvcasa --navegador` (serves `http://127.0.0.1:8765`, this computer only).
 
-En cada TV: **Ajustes → Sistema → Acerca de → 7 clics en "Compilación"**, luego **Opciones para desarrolladores →
-Depuración de red / USB**. La primera conexión pide aceptar "Permitir depuración" en la pantalla del TV.
+On each TV: **Settings → System → About → click "Build" 7 times**, then **Developer options → Network / USB
+debugging**. The first connection asks you to accept "Allow debugging" on the TV screen.
 
-## Qué hace
+## What it does
 
-| Pestaña | Qué hace | Seguridad |
+| Tab | What it does | Safety |
 |---|---|---|
-| Limpieza | Propone qué desactivar y lo hace de a una | Respaldo antes; tras cada app comprueba Google Cast (8009) y el control remoto (6466); si algo se rompe, la reactiva y se detiene. Nunca desinstala apps del sistema |
-| Inicio y fotos | Inicio limpio (Clean Your TV), complementos Fotos y Smart Home, fondo con fotos, protector de fotos y videos | Si el inicio nuevo no toma el control, vuelve solo al original. En Google TV solo con "forzar" |
-| Respaldo | Guarda el estado y vuelve a cualquier respaldo | Reactiva lo desactivado después, devuelve inicio y protector |
-| Pruebas | Cast, control, espacio, inicio, limpieza pendiente, nada crítico tocado | Informe `.md` y `.json` en `datos/informes` |
+| Limpieza (Cleanup) | Suggests what to disable and disables apps one at a time | Backup first; after each app it checks Google Cast (8009) and the remote (6466); if something breaks, it re-enables the app and stops. Never uninstalls system apps |
+| Inicio y fotos (Home & photos) | Clean home screen (Clean Your TV), Photos and Smart Home add-ons, photo wallpaper, photo and video screensaver | If the new home screen doesn't take over, it switches back to the original on its own. On Google TV only with "forzar" (force) |
+| Respaldo (Backup) | Saves the TV's state and restores any backup | Re-enables what was disabled afterwards, restores home screen and screensaver |
+| Pruebas (Tests) | Cast, remote, storage, home screen, pending cleanup, nothing critical touched | `.md` and `.json` report in `datos/informes` |
 
-### De dónde sale la propuesta de limpieza (cualquier TV)
+### Where the cleanup suggestions come from (any TV)
 
-1. **Perfil probado en casa** (`tvcasa/perfiles/`): Sony BRAVIA (Android TV 9), JVC/Changhong y JVC/KTC (Google TV 11).
-2. **Lista de la comunidad para el mismo modelo**: 307 modelos de 87 marcas de
-   [Clean Your TV](https://github.com/Gathin23/cleanyourtv) (MIT), en `tvcasa/catalogo/`.
-3. **Catálogo general**: lo que el TV tiene activo y que otros modelos ya desactivaron. Marcado solo si lo hicieron
-   20+ modelos; las apps que se ven en el inicio (Netflix, YouTube…) van **siempre sin marcar**.
+1. **Profiles tested on real TVs** (`tvcasa/perfiles/`): Sony BRAVIA (Android TV 9), JVC/Changhong and JVC/KTC
+   (Google TV 11).
+2. **Community list for the same model**: 307 models from 87 brands from
+   [Clean Your TV](https://github.com/Gathin23/cleanyourtv) (MIT), in `tvcasa/catalogo/`.
+3. **General catalog**: apps active on your TV that other models have disabled. Pre-selected only if 20+ models did
+   so; apps visible on the home screen (Netflix, YouTube…) are **never pre-selected**.
 
-En los tres casos se descarta lo de la lista **NUNCA** (`perfiles.py`): Google Play, Cast, control remoto, asistente,
-sintonizador/HDMI, configuración, inicio original, teclados, Bluetooth, actualizaciones, menús de fábrica…
+In all three cases, anything on the **NUNCA** (never) list in `perfiles.py` is excluded: Google Play, Cast, remote
+service, assistant, tuner/HDMI, settings, the original home screen, keyboards, Bluetooth, updates, factory menus…
 
-Actualizar el catálogo: `python herramientas/importar_catalogo.py <carpeta del repo cleanyourtv>`.
+Update the catalog: `python herramientas/importar_catalogo.py <path to the cleanyourtv repo>`.
 
-## Consultar a Claude
+## Ask Claude
 
-Opcional. Necesita una clave de Anthropic en la variable `ANTHROPIC_API_KEY` (o `ant auth login`) **antes** de abrir
-la app; la app no la guarda. Manda la pregunta, el estado del TV y el registro de la acción, **sin MAC, tokens ni
-contraseñas** (se borran antes). Modelo `claude-opus-5-5`; cuesta centavos por consulta.
+Optional. Needs an Anthropic API key in the `ANTHROPIC_API_KEY` environment variable (or `ant auth login`)
+**before** opening the app; the app doesn't store it. It sends your question, the TV's state and the action log,
+**with MAC addresses, tokens and passwords removed** first. Model `claude-opus-5-5`; costs cents per question.
 
-## Por línea de comandos
+## Command line
 
 ```
 .venv/Scripts/python -m tvcasa pruebas 192.168.1.50     # Windows (Mac: .venv/bin/python)
 .venv/Scripts/python -m tvcasa info 192.168.1.50
-.venv/Scripts/python -m unittest discover -s pruebas    # pruebas automáticas (TV simulado)
+.venv/Scripts/python -m unittest discover -s pruebas    # automated tests (simulated TV)
 ```
 
-## Al terminar
+## When you're done
 
-Apagar la **depuración de red** en cada TV: mientras está activa, cualquier equipo de la red puede controlarlo.
+Turn off **network debugging** on each TV: while it's on, any device on your network can control the TV.
 
-## Próximos pasos
+## Roadmap
 
-- Samsung Tizen / LG webOS: otro "conector" con el mismo esquema (perfil, propuesta, verificación, respaldo).
-- Video de fondo en el inicio (hoy el video va en el protector Fotos).
-- Programar fotos por fecha (Navidad, cumpleaños) desde la app.
+- Samsung Tizen / LG webOS: another "connector" with the same design (profile, suggestions, checks, backup).
+- Video wallpaper on the home screen (today video works in the Photos screensaver).
+- Schedule photos by date (Christmas, birthdays) from the app.
+- English interface.
 
-## Aviso
+## Disclaimer
 
-Úsala bajo tu propio riesgo. Desactiva apps del sistema (nunca las desinstala) y siempre guarda un respaldo antes,
-pero cada fabricante es distinto. "Consultar a Claude" usa tu propia clave de la API de Anthropic. ADB no viene
-incluido: el instalador lo baja de Google. Licencia MIT (ver `LICENSE`).
+Use at your own risk. It disables system apps (never uninstalls them) and always saves a backup first, but every
+manufacturer is different. "Ask Claude" uses your own Anthropic API key. ADB isn't bundled: the installer downloads
+it from Google. MIT license (see `LICENSE`).
 
-## Apoya el proyecto
+## Support the project
 
-TV House es gratis y de código abierto. Si te ahorró tiempo o dejó tu TV como nuevo, puedes apoyarlo en
-[GitHub Sponsors](https://github.com/sponsors/tutvcasa23-star). Con eso se compran TVs de otras marcas para probar
-y se agregan Samsung y LG.
+TV House is free and open source. If it saved you time or made your TV feel new again, you can support it on
+[GitHub Sponsors](https://github.com/sponsors/tutvcasa23-star). It helps buy TVs from other brands for testing and
+add Samsung and LG support.
