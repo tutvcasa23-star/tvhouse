@@ -5,47 +5,67 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TV Casa</title>
 <style>
-  :root { --bg:#f5f6f8; --panel:#fff; --texto:#1d2330; --suave:#667085; --borde:#e3e6eb; --acento:#2f6fed;
-          --ok:#1a8f4c; --aviso:#b7791f; --falla:#c53030; --codigo:#f0f2f5; }
+  :root { --bg:#f3f4f8; --bg2:#e9ecf5; --panel:#ffffff; --texto:#151a26; --suave:#5f6b80; --borde:#e2e6ee;
+          --acento:#4f6bff; --acento2:#9b5cff; --ok:#13915a; --aviso:#b7791f; --falla:#d03838; --codigo:#f1f3f8;
+          --sombra:0 1px 2px rgba(20,26,40,.05), 0 8px 24px rgba(20,26,40,.06); }
   @media (prefers-color-scheme: dark) {
-    :root { --bg:#12151b; --panel:#1b2029; --texto:#e7eaf0; --suave:#98a2b3; --borde:#2b3240; --acento:#6c9bff;
-            --ok:#4cc38a; --aviso:#e9b949; --falla:#f07171; --codigo:#232a36; } }
+    :root { --bg:#0c0f16; --bg2:#141a2a; --panel:#161b26; --texto:#eceff6; --suave:#9aa5ba; --borde:#262e3e;
+            --acento:#7b8dff; --acento2:#b98aff; --ok:#45c98b; --aviso:#e9b949; --falla:#f37676; --codigo:#1e2533;
+            --sombra:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35); } }
   * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--texto); }
-  header { padding:14px 20px; border-bottom:1px solid var(--borde); display:flex; gap:12px; align-items:baseline; }
-  header h1 { margin:0; font-size:20px; } header span { color:var(--suave); font-size:13px; }
-  main { display:grid; grid-template-columns:260px 1fr; gap:16px; padding:16px 20px; max-width:1400px; }
+  body { margin:0; font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--texto);
+         background:radial-gradient(1200px 500px at 10% -10%, var(--bg2), transparent 70%), var(--bg); min-height:100vh; }
+  header { padding:16px 24px; display:flex; gap:14px; align-items:center;
+           background:linear-gradient(120deg, var(--acento), var(--acento2)); color:#fff; }
+  header .logo { width:40px; height:40px; border-radius:11px; background:rgba(255,255,255,.18); display:grid; place-items:center; flex:none; }
+  header h1 { margin:0; font-size:21px; letter-spacing:.2px; } header span { opacity:.85; font-size:13px; display:block; }
+  main { display:grid; grid-template-columns:270px 1fr; gap:18px; padding:20px 24px; max-width:1400px; }
   @media (max-width:860px){ main { grid-template-columns:1fr; } }
-  .panel { background:var(--panel); border:1px solid var(--borde); border-radius:10px; padding:14px; }
-  h2 { font-size:15px; margin:0 0 10px; } h3 { font-size:14px; margin:14px 0 6px; }
-  .tv { display:block; width:100%; text-align:left; padding:9px 10px; margin-bottom:6px; border-radius:8px;
-        border:1px solid var(--borde); background:transparent; color:inherit; cursor:pointer; font:inherit; }
-  .tv.activo { border-color:var(--acento); box-shadow:0 0 0 1px var(--acento) inset; }
+  .panel { background:var(--panel); border:1px solid var(--borde); border-radius:16px; padding:16px 18px; box-shadow:var(--sombra); }
+  h2 { font-size:16px; margin:0 0 12px; } h3 { font-size:13px; margin:18px 0 8px; text-transform:uppercase; letter-spacing:.6px; color:var(--suave); }
+  .tv { display:flex; flex-direction:column; width:100%; text-align:left; padding:11px 12px 11px 50px; margin-bottom:8px; border-radius:12px;
+        border:1px solid var(--borde); background:var(--codigo); color:inherit; cursor:pointer; font:inherit; position:relative;
+        transition:transform .12s, border-color .12s, box-shadow .12s; }
+  .tv::before { content:""; position:absolute; left:12px; top:50%; width:26px; height:18px; margin-top:-11px; border-radius:4px;
+                border:2px solid var(--suave); }
+  .tv::after { content:""; position:absolute; left:20px; top:50%; width:10px; height:2px; margin-top:10px; background:var(--suave); border-radius:2px; }
+  .tv:hover { transform:translateY(-1px); border-color:var(--acento); }
+  .tv.activo { border-color:var(--acento); box-shadow:0 0 0 3px color-mix(in srgb, var(--acento) 22%, transparent); background:var(--panel); }
+  .tv.activo::before, .tv.activo::after { border-color:var(--acento); background-color:transparent; }
+  .tv.activo::after { background:var(--acento); }
   .tv small { color:var(--suave); display:block; }
-  button.b { font:inherit; padding:7px 12px; border-radius:7px; border:1px solid var(--borde); background:var(--panel);
-             color:inherit; cursor:pointer; margin:3px 6px 3px 0; }
-  button.b.prim { background:var(--acento); border-color:var(--acento); color:#fff; }
+  button.b { font:inherit; font-weight:500; padding:8px 14px; border-radius:10px; border:1px solid var(--borde); background:var(--panel);
+             color:inherit; cursor:pointer; margin:3px 6px 3px 0; transition:filter .12s, transform .12s; }
+  button.b:hover:not(:disabled) { filter:brightness(1.05); transform:translateY(-1px); }
+  button.b.prim { background:linear-gradient(120deg, var(--acento), var(--acento2)); border-color:transparent; color:#fff;
+                  box-shadow:0 4px 14px color-mix(in srgb, var(--acento) 35%, transparent); }
   button.b:disabled { opacity:.5; cursor:default; }
-  input[type=text], input[type=number], textarea { font:inherit; padding:6px 8px; border-radius:6px; border:1px solid var(--borde);
-             background:var(--bg); color:inherit; }
+  input[type=text], input[type=number], textarea { font:inherit; padding:7px 10px; border-radius:9px; border:1px solid var(--borde);
+             background:var(--codigo); color:inherit; outline:none; }
+  input:focus, textarea:focus { border-color:var(--acento); box-shadow:0 0 0 3px color-mix(in srgb, var(--acento) 20%, transparent); }
   input[type=number] { width:70px; }
+  input[type=checkbox] { accent-color:var(--acento); }
   .fila { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:6px 0; }
-  .chips span { display:inline-block; padding:2px 8px; border-radius:99px; font-size:12px; margin:2px 4px 2px 0; border:1px solid var(--borde); }
+  .chips span { display:inline-block; padding:3px 10px; border-radius:99px; font-size:12px; margin:2px 4px 2px 0; background:var(--codigo); border:1px solid var(--borde); }
   .ok { color:var(--ok); } .aviso { color:var(--aviso); } .falla { color:var(--falla); }
-  .barra { height:8px; background:var(--codigo); border-radius:4px; overflow:hidden; margin:4px 0 2px; }
-  .barra i { display:block; height:100%; background:var(--acento); }
-  .tabs { display:flex; gap:4px; border-bottom:1px solid var(--borde); margin:12px 0; flex-wrap:wrap; }
-  .tabs button { font:inherit; border:0; background:none; color:var(--suave); padding:8px 12px; cursor:pointer; border-bottom:2px solid transparent; }
-  .tabs button.activo { color:var(--texto); border-color:var(--acento); }
-  .lista label { display:flex; gap:8px; padding:5px 0; border-bottom:1px dashed var(--borde); }
-  .lista code, pre { background:var(--codigo); border-radius:5px; }
-  .lista code { padding:0 4px; font-size:12px; }
-  pre { padding:10px; white-space:pre-wrap; max-height:340px; overflow:auto; font-size:12.5px; margin:0; }
-  table { border-collapse:collapse; width:100%; } td, th { text-align:left; padding:6px; border-bottom:1px solid var(--borde); vertical-align:top; }
+  .barra { height:8px; background:var(--codigo); border-radius:99px; overflow:hidden; margin:4px 0 2px; }
+  .barra i { display:block; height:100%; background:linear-gradient(90deg, var(--acento), var(--acento2)); border-radius:99px; }
+  .tabs { display:inline-flex; gap:4px; padding:4px; margin:0 0 14px; flex-wrap:wrap; background:var(--codigo); border-radius:12px; }
+  .tabs button { font:inherit; font-weight:500; border:0; background:none; color:var(--suave); padding:7px 14px; cursor:pointer; border-radius:9px; }
+  .tabs button.activo { color:var(--texto); background:var(--panel); box-shadow:var(--sombra); }
+  .lista label { display:flex; gap:10px; padding:7px 4px; border-bottom:1px solid var(--borde); }
+  .lista label:hover { background:var(--codigo); border-radius:8px; }
+  .lista code, pre { background:var(--codigo); border-radius:8px; }
+  .lista code { padding:1px 6px; font-size:12px; }
+  pre { padding:12px; white-space:pre-wrap; max-height:340px; overflow:auto; font-size:12.5px; margin:0; }
+  table { border-collapse:collapse; width:100%; } td, th { text-align:left; padding:8px 6px; border-bottom:1px solid var(--borde); vertical-align:top; }
   .nota { color:var(--suave); font-size:13px; }
-  .oculto { display:none; }
-  #estado { display:flex; align-items:center; gap:10px; padding:10px 14px; margin-bottom:16px; border-radius:10px;
-            background:var(--panel); border:1px solid var(--acento); }
+  .oculto { display:none !important; }
+  .bienvenida { padding:6px 2px; }
+  .pasos { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .pasos span { padding:6px 12px; border-radius:99px; font-size:13px; background:var(--codigo); border:1px solid var(--borde); }
+  #estado { display:flex; align-items:center; gap:10px; padding:11px 16px; margin-bottom:16px; border-radius:14px;
+            background:var(--panel); border:1px solid var(--acento); box-shadow:var(--sombra); }
   #estado.error { border-color:var(--falla); color:var(--falla); }
   #estado.ok { border-color:var(--ok); color:var(--ok); }
   #estado.ok .giro { display:none; }
@@ -56,7 +76,10 @@
 </style>
 </head>
 <body>
-<header><h1>TV Casa</h1><span>Configura los TV por ADB, con verificación y vuelta atrás</span></header>
+<header>
+  <div class="logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="2.5" y="4" width="19" height="13" rx="2.5"/><path d="M8 21h8M12 17v4"/></svg></div>
+  <div><h1>TV Casa</h1><span>Tu TV limpio, rápido y con las fotos de la familia</span></div>
+</header>
 <main>
   <section class="panel">
     <h2>Televisores</h2>
@@ -70,7 +93,12 @@
 
   <section>
     <div id="estado" class="oculto"><div class="giro"></div><span id="estado-texto"></span></div>
-    <div class="panel" id="detalle"><p class="nota">Elige un TV.</p></div>
+    <div class="panel" id="detalle"><div class="bienvenida">
+      <h2>Bienvenido</h2>
+      <p class="nota">Elige un televisor a la izquierda o agrégalo por su IP. Antes de cambiar nada se guarda un respaldo,
+        y todo se puede deshacer.</p>
+      <div class="pasos"><span>1. Activa la depuración en el TV</span><span>2. Conéctalo</span><span>3. Limpia, personaliza y prueba</span></div>
+    </div></div>
 
     <div class="panel oculto" id="acciones" style="margin-top:16px">
       <div class="tabs" id="tabs">
