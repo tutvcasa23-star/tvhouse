@@ -6,17 +6,17 @@
 <title>TV House</title>
 <style>
   :root { --bg:#f3f4f8; --bg2:#e9ecf5; --panel:#ffffff; --texto:#151a26; --suave:#5f6b80; --borde:#e2e6ee;
-          --acento:#4f6bff; --acento2:#9b5cff; --ok:#13915a; --aviso:#b7791f; --falla:#d03838; --codigo:#f1f3f8;
+          --acento:#4f6bff; --acento2:#9b5cff; --ok:#13915a; --aviso:#b7791f; --falla:#d03838; --codigo:#f1f3f8; --grad1:#4f6bff; --grad2:#9b5cff;
           --sombra:0 1px 2px rgba(20,26,40,.05), 0 8px 24px rgba(20,26,40,.06); }
   @media (prefers-color-scheme: dark) {
     :root { --bg:#0c0f16; --bg2:#141a2a; --panel:#161b26; --texto:#eceff6; --suave:#9aa5ba; --borde:#262e3e;
-            --acento:#7b8dff; --acento2:#b98aff; --ok:#45c98b; --aviso:#e9b949; --falla:#f37676; --codigo:#1e2533;
+            --acento:#7b8dff; --acento2:#b98aff; --ok:#45c98b; --aviso:#e9b949; --falla:#f37676; --codigo:#1e2533; --grad1:#3d52e0; --grad2:#8247e5;
             --sombra:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35); } }
   * { box-sizing:border-box; }
   body { margin:0; font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--texto);
          background:radial-gradient(1200px 500px at 10% -10%, var(--bg2), transparent 70%), var(--bg); min-height:100vh; }
   header { padding:16px 24px; display:flex; gap:14px; align-items:center;
-           background:linear-gradient(120deg, var(--acento), var(--acento2)); color:#fff; }
+           background:linear-gradient(120deg, var(--grad1), var(--grad2)); color:#fff; }
   header .logo { width:40px; height:40px; border-radius:11px; background:rgba(255,255,255,.18); display:grid; place-items:center; flex:none; }
   header h1 { margin:0; font-size:21px; letter-spacing:.2px; } header span { opacity:.85; font-size:13px; display:block; }
   main { display:grid; grid-template-columns:270px 1fr; gap:18px; padding:20px 24px; max-width:1400px; }
@@ -37,7 +37,7 @@
   button.b { font:inherit; font-weight:500; padding:8px 14px; border-radius:10px; border:1px solid var(--borde); background:var(--panel);
              color:inherit; cursor:pointer; margin:3px 6px 3px 0; transition:filter .12s, transform .12s; }
   button.b:hover:not(:disabled) { filter:brightness(1.05); transform:translateY(-1px); }
-  button.b.prim { background:linear-gradient(120deg, var(--acento), var(--acento2)); border-color:transparent; color:#fff;
+  button.b.prim { background:linear-gradient(120deg, var(--grad1), var(--grad2)); border-color:transparent; color:#fff;
                   box-shadow:0 4px 14px color-mix(in srgb, var(--acento) 35%, transparent); }
   button.b:disabled { opacity:.5; cursor:default; }
   input[type=text], input[type=number], textarea { font:inherit; padding:7px 10px; border-radius:9px; border:1px solid var(--borde);

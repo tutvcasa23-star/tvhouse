@@ -12,7 +12,9 @@ Funciona en **Windows y Mac**. Samsung (Tizen), LG (webOS) y otros sistemas: pen
 |---|---|
 | ![Bienvenida con los TV de la red](docs/img/bienvenida.png) | ![Pruebas: Cast, control, espacio e inicio](docs/img/pruebas.png) |
 
-*Capturas con datos de ejemplo.*
+![Inicio y fotos en modo oscuro: inicio limpio, complementos, fondo y protector con fotos de la familia](docs/img/inicio-oscuro.png)
+
+*Capturas con datos de ejemplo. La app se pone en modo claro u oscuro sola, según Windows o Mac.*
 
 ## Instalar
 
