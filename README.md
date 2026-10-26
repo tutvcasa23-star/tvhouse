@@ -1,4 +1,4 @@
-# TV Casa
+# TV House
 
 Configura los **Android TV / Google TV** de cualquier casa por la red, sin depender de la IA:
 limpieza de apps, inicio limpio estilo Apple TV, fondo y protector de fotos y videos, respaldo y vuelta atrás, y un
@@ -9,16 +9,16 @@ Funciona en **Windows y Mac**. Samsung (Tizen), LG (webOS) y otros sistemas: pen
 ## Instalar
 
 1. Python 3.10 o más nuevo ([python.org](https://www.python.org/downloads/)).
-2. En la carpeta `tvcasa`:
+2. Descarga el repo (botón **Code → Download ZIP**, o `git clone`) y, en esa carpeta:
    - Windows: `powershell -ExecutionPolicy Bypass -File instalar.ps1`
    - Mac: `bash instalar.sh`
 
    Crea su propio entorno de Python, instala `anthropic`, `pillow` y `pywebview`, baja ADB oficial de Google (verifica la firma en
    Windows) y **corre las pruebas automáticas**. Si alguna falla, no deja abrir la app.
 3. Abrir:
-   - Windows: ícono **TV Casa** en el escritorio o el menú Inicio. Abre su **propia ventana** (Edge WebView2, que ya
+   - Windows: ícono **TV House** en el escritorio o el menú Inicio. Abre su **propia ventana** (Edge WebView2, que ya
      trae Windows 11), sin navegador ni consola. Los botones "Elegir…" abren el explorador para escoger carpetas.
-   - Mac: doble clic en `abrir-tvcasa.command` (ventana propia con WebKit).
+   - Mac: doble clic en `abrir-tvhouse.command` (ventana propia con WebKit).
    - Si se prefiere el navegador: `python -m tvcasa --navegador` (queda en `http://127.0.0.1:8765`, solo esta computadora).
 
 En cada TV: **Ajustes → Sistema → Acerca de → 7 clics en "Compilación"**, luego **Opciones para desarrolladores →
@@ -78,6 +78,6 @@ incluido: el instalador lo baja de Google. Licencia MIT (ver `LICENSE`).
 
 ## Apoya el proyecto
 
-TV Casa es gratis y de código abierto. Si te ahorró tiempo o dejó tu TV como nuevo, puedes apoyarlo en
+TV House es gratis y de código abierto. Si te ahorró tiempo o dejó tu TV como nuevo, puedes apoyarlo en
 [GitHub Sponsors](https://github.com/sponsors/tutvcasa23-star). Con eso se compran TVs de otras marcas para probar
 y se agregan Samsung y LG.

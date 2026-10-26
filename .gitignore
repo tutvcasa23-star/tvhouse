@@ -3,5 +3,5 @@ __pycache__/
 datos/
 herramientas/platform-tools/
 abrir-tvcasa.cmd
-abrir-tvcasa.command
-TV Casa.lnk
+abrir-tvhouse.command
+TV House.lnk

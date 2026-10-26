@@ -1,4 +1,4 @@
-"""TV Casa: `python -m tvcasa` abre la pantalla en el navegador. `python -m tvcasa pruebas <ip>` corre solo las pruebas."""
+"""TV House: `python -m tvcasa` abre la pantalla en el navegador. `python -m tvcasa pruebas <ip>` corre solo las pruebas."""
 from __future__ import annotations
 
 import argparse
@@ -39,7 +39,7 @@ def main() -> int:
 
     srv = web.servir(a.puerto)
     url = f"http://127.0.0.1:{a.puerto}/"
-    print(f"TV Casa en {url}  (Ctrl+C para cerrar)")
+    print(f"TV House en {url}  (Ctrl+C para cerrar)")
     if not a.sin_navegador:
         webbrowser.open(url)
     try:

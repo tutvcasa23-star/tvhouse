@@ -1,4 +1,4 @@
-"""Servidor local (solo 127.0.0.1) con la pantalla de TV Casa. Las acciones corren en segundo plano con registro."""
+"""Servidor local (solo 127.0.0.1) con la pantalla de TV House. Las acciones corren en segundo plano con registro."""
 from __future__ import annotations
 
 import json

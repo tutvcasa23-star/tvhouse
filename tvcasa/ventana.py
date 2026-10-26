@@ -1,4 +1,4 @@
-"""TV Casa en su propia ventana (Edge WebView2 en Windows, WebKit en Mac): sin navegador ni consola."""
+"""TV House en su propia ventana (Edge WebView2 en Windows, WebKit en Mac): sin navegador ni consola."""
 from __future__ import annotations
 
 import sys
@@ -8,7 +8,7 @@ from pathlib import Path
 from . import web
 
 ICONO = Path(__file__).resolve().parent / "static" / "tvcasa.ico"
-APP_ID = "TVCasa.Casa.1"  # identidad propia en la barra de tareas de Windows (si no, agrupa con Python)
+APP_ID = "TVHouse.App.1"  # identidad propia en la barra de tareas de Windows (si no, agrupa con Python)
 
 
 class Api:
@@ -35,7 +35,7 @@ def _identidad_windows() -> None:
 
 
 def _icono_windows(ventana) -> None:
-    """La ventana de pywebview (WinForms) toma el ícono de pythonw.exe; se lo cambiamos por el de TV Casa."""
+    """La ventana de pywebview (WinForms) toma el ícono de pythonw.exe; se lo cambiamos por el de TV House."""
     if sys.platform != "win32" or not ICONO.exists():
         return
     try:
@@ -70,7 +70,7 @@ def abrir() -> None:
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     api = Api()
     ancho, alto, x, y = _medidas(webview)
-    api._ventana = webview.create_window("TV Casa", f"http://127.0.0.1:{srv.server_address[1]}/", js_api=api,
+    api._ventana = webview.create_window("TV House", f"http://127.0.0.1:{srv.server_address[1]}/", js_api=api,
                                         width=ancho, height=alto, x=x, y=y, min_size=(900, 600))
     api._ventana.events.shown += lambda: threading.Thread(target=_icono_windows, args=(api._ventana,), daemon=True).start()
     webview.start()

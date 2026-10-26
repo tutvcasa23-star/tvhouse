@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Instala TV Casa en Mac (o Linux): entorno de Python propio, librerías y ADB de Google. Luego corre las pruebas.
+# Instala TV House en Mac (o Linux): entorno de Python propio, librerías y ADB de Google. Luego corre las pruebas.
 # Uso: bash instalar.sh
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -22,9 +22,9 @@ fi
 
 .venv/bin/python -m unittest discover -s pruebas -q
 
-cat > abrir-tvcasa.command <<'EOF'
+cat > abrir-tvhouse.command <<'EOF'
 #!/usr/bin/env bash
 cd "$(dirname "$0")" && .venv/bin/python -m tvcasa
 EOF
-chmod +x abrir-tvcasa.command
-echo "Listo. Para abrir: doble clic en $(pwd)/abrir-tvcasa.command"
+chmod +x abrir-tvhouse.command
+echo "Listo. Para abrir: doble clic en $(pwd)/abrir-tvhouse.command"

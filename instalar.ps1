@@ -1,4 +1,4 @@
-﻿# Instala TV Casa en Windows: entorno de Python propio, librerías y ADB de Google. Luego corre las pruebas.
+﻿# Instala TV House en Windows: entorno de Python propio, librerías y ADB de Google. Luego corre las pruebas.
 # Uso: powershell -ExecutionPolicy Bypass -File instalar.ps1
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
@@ -25,12 +25,12 @@ if (-not (Test-Path herramientas\platform-tools\adb.exe)) {
 & .\.venv\Scripts\python.exe -m unittest discover -s pruebas -q
 if ($LASTEXITCODE -ne 0) { throw 'Fallaron las pruebas automáticas: revisar antes de usar.' }
 
-# Accesos directos "TV Casa" (ventana propia, sin consola ni navegador): escritorio, menú Inicio y esta carpeta
+# Accesos directos "TV House" (ventana propia, sin consola ni navegador): escritorio, menú Inicio y esta carpeta
 $shell = New-Object -ComObject WScript.Shell
 $destinos = @(
-    (Join-Path ([Environment]::GetFolderPath('Desktop')) 'TV Casa.lnk'),
-    (Join-Path ([Environment]::GetFolderPath('Programs')) 'TV Casa.lnk'),
-    (Join-Path $PSScriptRoot 'TV Casa.lnk')
+    (Join-Path ([Environment]::GetFolderPath('Desktop')) 'TV House.lnk'),
+    (Join-Path ([Environment]::GetFolderPath('Programs')) 'TV House.lnk'),
+    (Join-Path $PSScriptRoot 'TV House.lnk')
 )
 foreach ($d in $destinos) {
     $l = $shell.CreateShortcut($d)
@@ -42,4 +42,4 @@ foreach ($d in $destinos) {
     $l.Save()
 }
 Remove-Item abrir-tvcasa.cmd -ErrorAction SilentlyContinue
-Write-Host 'Listo. Abre "TV Casa" desde el escritorio o el menú Inicio.'
+Write-Host 'Listo. Abre "TV House" desde el escritorio o el menú Inicio.'
