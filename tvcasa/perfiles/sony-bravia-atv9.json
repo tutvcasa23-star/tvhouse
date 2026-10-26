@@ -1,0 +1,217 @@
+{
+  "nombre": "Sony BRAVIA 4K (Android TV 9)",
+  "detectar": {
+    "fabricante": "^Sony$",
+    "modelo": "BRAVIA"
+  },
+  "plataforma": "androidtv",
+  "inicio_original": "com.google.android.tvlauncher",
+  "tv_en_vivo": "com.sony.dtv.tvx",
+  "lanzador_permitido": true,
+  "nota": "Probado el 25/10/2026 en un BRAVIA real. Lista basada en examples/sony-bravia-4k-gb de Clean Your TV.",
+  "desactivar": [
+    {
+      "paquete": "com.google.android.play.games",
+      "descripcion": "Play Juegos",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.google.android.marvin.talkback",
+      "descripcion": "TalkBack (lector de pantalla)",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.android.printspooler",
+      "descripcion": "Cola de impresión",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.google.android.youtube.tvmusic",
+      "descripcion": "YouTube Music",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.amazon.amazonvideo.livingroom",
+      "descripcion": "Prime Video",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.google.android.feedback",
+      "descripcion": "Google Feedback",
+      "grupo": "telemetria"
+    },
+    {
+      "paquete": "com.google.android.videos",
+      "descripcion": "Tienda de películas de Google",
+      "grupo": "publicidad"
+    },
+    {
+      "paquete": "com.esaba.downloader",
+      "descripcion": "Downloader (instala apps fuera de la tienda)",
+      "grupo": "seguridad"
+    },
+    {
+      "paquete": "tv.samba.ssm",
+      "descripcion": "Samba TV: rastrea lo que se ve en pantalla",
+      "grupo": "rastreo"
+    },
+    {
+      "paquete": "com.qterics.da.product",
+      "descripcion": "Agente Qterics (telemetría)",
+      "grupo": "telemetria"
+    },
+    {
+      "paquete": "com.sony.dtv.da.service",
+      "descripcion": "Agente de Sony (soporte remoto)",
+      "grupo": "telemetria"
+    },
+    {
+      "paquete": "com.sony.dtv.sonybugreportsys",
+      "descripcion": "Reportes de errores de Sony",
+      "grupo": "telemetria"
+    },
+    {
+      "paquete": "com.google.android.tv.bugreportsender",
+      "descripcion": "Reportes de errores de Google",
+      "grupo": "telemetria"
+    },
+    {
+      "paquete": "com.sony.dtv.sonyselect",
+      "descripcion": "Sony Select (promociones)",
+      "grupo": "publicidad"
+    },
+    {
+      "paquete": "com.sony.dtv.discovery",
+      "descripcion": "Barra Discover de Sony",
+      "grupo": "publicidad"
+    },
+    {
+      "paquete": "com.sony.dtv.bivlinfo",
+      "descripcion": "Lista de servicios para Discover",
+      "grupo": "publicidad"
+    },
+    {
+      "paquete": "com.google.android.tvrecommendations",
+      "descripcion": "Filas de recomendaciones",
+      "grupo": "publicidad"
+    },
+    {
+      "paquete": "com.sony.dtv.demomode",
+      "descripcion": "Modo demostración",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.sony.dtv.demosupport",
+      "descripcion": "Soporte de demostración",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.sony.dtv.multiscreendemo",
+      "descripcion": "Demo multipantalla",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.sony.dtv.smarthelp",
+      "descripcion": "Ayuda de Sony",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.sony.dtv.imanual",
+      "descripcion": "Manual en pantalla",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.sony.dtv.customersupport",
+      "descripcion": "Soporte al cliente",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.vewd.core.service",
+      "descripcion": "Tienda Opera TV",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.vewd.core.integration.dia",
+      "descripcion": "Integración Opera TV",
+      "grupo": "preinstalada"
+    },
+    {
+      "paquete": "com.ionitech.airscreen",
+      "descripcion": "AirScreen (recibe pantallas de la red)",
+      "grupo": "seguridad"
+    }
+  ],
+  "opcionales": [
+    {
+      "paquete": "screnmirroring.com",
+      "descripcion": "Duplicar pantalla (Miracast)",
+      "grupo": "funcion"
+    },
+    {
+      "paquete": "com.sony.dtv.networkapp.wifidirect",
+      "descripcion": "Wi-Fi Direct",
+      "grupo": "funcion"
+    },
+    {
+      "paquete": "com.google.android.backdrop",
+      "descripcion": "Protector de pantalla ambiente de Google",
+      "grupo": "funcion"
+    },
+    {
+      "paquete": "com.sony.dtv.b2b.vendorprotocol",
+      "descripcion": "Anuncia el TV para domótica Control4 (Node.js 2015)",
+      "grupo": "seguridad"
+    }
+  ],
+  "desinstalar": [
+    {
+      "paquete": "com.disney.starplus",
+      "descripcion": "Star+ (servicio cerrado)",
+      "grupo": "sin-uso"
+    },
+    {
+      "paquete": "com.google.android.music",
+      "descripcion": "Google Play Música (cerrada)",
+      "grupo": "sin-uso"
+    },
+    {
+      "paquete": "com.google.android.inputmethod.japanese",
+      "descripcion": "Teclado japonés",
+      "grupo": "sin-uso"
+    }
+  ],
+  "nunca": [
+    "com.google.android.apps.mediashell",
+    "com.google.android.tv.remote.service",
+    "com.google.android.katniss",
+    "com.google.android.gms",
+    "com.google.android.gsf",
+    "com.android.vending",
+    "com.android.tv.settings",
+    "com.android.settings",
+    "com.android.systemui",
+    "com.android.providers.*",
+    "com.android.bluetooth",
+    "com.google.android.inputmethod.latin",
+    "com.google.android.packageinstaller",
+    "com.google.android.permissioncontroller",
+    "com.google.android.tungsten.setupwraith",
+    "com.dolby.android.audio.service",
+    "com.mediatek.*",
+    "android",
+    "com.sony.dtv.tvx",
+    "com.sony.dtv.tvinput.*",
+    "com.sony.dtv.braviasync*",
+    "com.sony.dtv.sonysystemservice",
+    "com.sony.dtv.settingsprovider",
+    "com.sony.dtv.systemupdate",
+    "com.sony.dtv.remotepairing",
+    "com.sony.dtv.rcpowerkey",
+    "com.sony.dtv.uinputservice",
+    "com.sony.dtv.imeproxy",
+    "com.sony.dtv.timers",
+    "mtktvapi.agent",
+    "com.sony.dtv.b2b.hotelmode"
+  ],
+  "id": "sony-bravia-atv9"
+}

@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TV Casa</title>
+<style>
+  :root { --bg:#f5f6f8; --panel:#fff; --texto:#1d2330; --suave:#667085; --borde:#e3e6eb; --acento:#2f6fed;
+          --ok:#1a8f4c; --aviso:#b7791f; --falla:#c53030; --codigo:#f0f2f5; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#12151b; --panel:#1b2029; --texto:#e7eaf0; --suave:#98a2b3; --borde:#2b3240; --acento:#6c9bff;
+            --ok:#4cc38a; --aviso:#e9b949; --falla:#f07171; --codigo:#232a36; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--texto); }
+  header { padding:14px 20px; border-bottom:1px solid var(--borde); display:flex; gap:12px; align-items:baseline; }
+  header h1 { margin:0; font-size:20px; } header span { color:var(--suave); font-size:13px; }
+  main { display:grid; grid-template-columns:260px 1fr; gap:16px; padding:16px 20px; max-width:1400px; }
+  @media (max-width:860px){ main { grid-template-columns:1fr; } }
+  .panel { background:var(--panel); border:1px solid var(--borde); border-radius:10px; padding:14px; }
+  h2 { font-size:15px; margin:0 0 10px; } h3 { font-size:14px; margin:14px 0 6px; }
+  .tv { display:block; width:100%; text-align:left; padding:9px 10px; margin-bottom:6px; border-radius:8px;
+        border:1px solid var(--borde); background:transparent; color:inherit; cursor:pointer; font:inherit; }
+  .tv.activo { border-color:var(--acento); box-shadow:0 0 0 1px var(--acento) inset; }
+  .tv small { color:var(--suave); display:block; }
+  button.b { font:inherit; padding:7px 12px; border-radius:7px; border:1px solid var(--borde); background:var(--panel);
+             color:inherit; cursor:pointer; margin:3px 6px 3px 0; }
+  button.b.prim { background:var(--acento); border-color:var(--acento); color:#fff; }
+  button.b:disabled { opacity:.5; cursor:default; }
+  input[type=text], input[type=number], textarea { font:inherit; padding:6px 8px; border-radius:6px; border:1px solid var(--borde);
+             background:var(--bg); color:inherit; }
+  input[type=number] { width:70px; }
+  .fila { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:6px 0; }
+  .chips span { display:inline-block; padding:2px 8px; border-radius:99px; font-size:12px; margin:2px 4px 2px 0; border:1px solid var(--borde); }
+  .ok { color:var(--ok); } .aviso { color:var(--aviso); } .falla { color:var(--falla); }
+  .barra { height:8px; background:var(--codigo); border-radius:4px; overflow:hidden; margin:4px 0 2px; }
+  .barra i { display:block; height:100%; background:var(--acento); }
+  .tabs { display:flex; gap:4px; border-bottom:1px solid var(--borde); margin:12px 0; flex-wrap:wrap; }
+  .tabs button { font:inherit; border:0; background:none; color:var(--suave); padding:8px 12px; cursor:pointer; border-bottom:2px solid transparent; }
+  .tabs button.activo { color:var(--texto); border-color:var(--acento); }
+  .lista label { display:flex; gap:8px; padding:5px 0; border-bottom:1px dashed var(--borde); }
+  .lista code, pre { background:var(--codigo); border-radius:5px; }
+  .lista code { padding:0 4px; font-size:12px; }
+  pre { padding:10px; white-space:pre-wrap; max-height:340px; overflow:auto; font-size:12.5px; margin:0; }
+  table { border-collapse:collapse; width:100%; } td, th { text-align:left; padding:6px; border-bottom:1px solid var(--borde); vertical-align:top; }
+  .nota { color:var(--suave); font-size:13px; }
+  .oculto { display:none; }
+  #estado { display:flex; align-items:center; gap:10px; padding:10px 14px; margin-bottom:16px; border-radius:10px;
+            background:var(--panel); border:1px solid var(--acento); }
+  #estado.error { border-color:var(--falla); color:var(--falla); }
+  #estado.ok { border-color:var(--ok); color:var(--ok); }
+  #estado.ok .giro { display:none; }
+  .giro { width:16px; height:16px; border-radius:50%; border:2px solid var(--borde); border-top-color:var(--acento);
+          animation:giro .8s linear infinite; flex:none; }
+  #estado.error .giro { display:none; }
+  @keyframes giro { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+<header><h1>TV Casa</h1><span>Configura los TV por ADB, con verificación y vuelta atrás</span></header>
+<main>
+  <section class="panel">
+    <h2>Televisores</h2>
+    <div id="tvs" class="nota"></div>
+    <div id="busqueda" class="fila nota"></div>
+    <h3>Agregar por IP</h3>
+    <div class="fila"><input id="nueva-ip" type="text" placeholder="192.168.1.50" size="14">
+      <button class="b" onclick="conectar()">Conectar</button></div>
+    <p class="nota">El TV necesita la <b>depuración de red</b> activa. La primera vez, acepta "Permitir depuración" en su pantalla.</p>
+  </section>
+
+  <section>
+    <div id="estado" class="oculto"><div class="giro"></div><span id="estado-texto"></span></div>
+    <div class="panel" id="detalle"><p class="nota">Elige un TV.</p></div>
+
+    <div class="panel oculto" id="acciones" style="margin-top:16px">
+      <div class="tabs" id="tabs">
+        <button data-t="limpieza" class="activo">Limpieza</button><button data-t="inicio">Inicio y fotos</button>
+        <button data-t="respaldo">Respaldo</button><button data-t="pruebas">Pruebas</button>
+      </div>
+
+      <div data-p="limpieza">
+        <p class="nota">Se respalda el TV antes de empezar. Se desactiva de a una app y, si Cast o el control dejan de responder, se reactiva y se detiene.</p>
+        <div id="lista-desactivar" class="lista"></div>
+        <button class="b prim" onclick="limpiar()">Desactivar seleccionadas</button>
+        <h3>Desinstalar (apps de usuario sin uso)</h3>
+        <div id="lista-desinstalar" class="lista"></div>
+        <button class="b" onclick="desinstalar()">Desinstalar seleccionadas</button>
+        <h3>Espacio</h3>
+        <button class="b" onclick="correr('cache')">Liberar caché de todas las apps</button>
+      </div>
+
+      <div data-p="inicio" class="oculto">
+        <h3>Inicio limpio (Clean Your TV)</h3>
+        <p class="nota" id="nota-lanzador"></p>
+        <div class="fila"><button class="b prim" onclick="lanzador()">Instalar inicio nuevo</button>
+          <button class="b" id="btn-quitar-red" onclick="correr('quitar_redireccion')">Quitar redirección</button>
+          <label class="nota"><input type="checkbox" id="forzar"> forzar: desactivar el inicio original (bajo tu riesgo)</label></div>
+        <h3>Complementos</h3>
+        <button class="b" onclick="correr('complementos', {complementos:['fotos','smarthome']})">Instalar Fotos y Smart Home</button>
+        <h3>Fondo del inicio</h3>
+        <div class="fila">Carpeta <input id="c-fondo" type="text" size="38"> <button class="b elegir" onclick="elegir_carpeta('#c-fondo')">Elegir…</button>
+          cada <input id="f-min" type="number" value="10"> min, oscurecer <input id="f-osc" type="number" value="25"> %
+          <label><input type="checkbox" id="f-sobrio"> sobrio</label></div>
+        <button class="b" onclick="fondo()">Poner fondo</button>
+        <h3>Protector de fotos y videos</h3>
+        <div class="fila">Carpeta <input id="c-prot" type="text" size="38"> <button class="b elegir" onclick="elegir_carpeta('#c-prot')">Elegir…</button>
+          <input id="p-seg" type="number" value="20"> s por foto, arranca tras <input id="p-min" type="number" value="10"> min</div>
+        <button class="b" onclick="fotos()">Cargar protector</button>
+      </div>
+
+      <div data-p="respaldo" class="oculto">
+        <button class="b prim" onclick="correr('respaldo')">Crear respaldo ahora</button>
+        <h3>Respaldos guardados</h3><div id="respaldos" class="lista"></div>
+      </div>
+
+      <div data-p="pruebas" class="oculto">
+        <button class="b prim" onclick="correr('pruebas')">Correr todas las pruebas</button>
+        <div id="tabla-pruebas"></div>
+      </div>
+    </div>
+
+    <div class="panel oculto" id="registro-panel" style="margin-top:16px">
+      <h2 id="registro-titulo">Registro</h2>
+      <pre id="registro"></pre>
+      <h3>Consultar a Claude</h3>
+      <p class="nota">Se manda el estado del TV y este registro, sin MAC ni claves. Requiere ANTHROPIC_API_KEY (ver README).</p>
+      <textarea id="pregunta" rows="3" style="width:100%" placeholder="¿Qué pasó? ¿Cómo lo arreglo?"></textarea>
+      <button class="b" id="btn-claude" onclick="consultar()">Consultar a Claude</button>
+      <pre id="respuesta" class="oculto" style="margin-top:8px"></pre>
+    </div>
+  </section>
+</main>
+<script>
+const CLAVE = "__CLAVE__";
+let ip = null, info = null, perfil = null, propuesta = null, trabajo = null;
+const $ = s => document.querySelector(s);
+let temporizador = null;
+function estado(texto, tipo = "") {   // tipo: "" (trabajando, con giro), "ok" (se oculta solo) o "error"
+  const e = $("#estado");
+  clearTimeout(temporizador);
+  if (!texto) return e.classList.add("oculto");
+  $("#estado-texto").textContent = texto;
+  e.classList.toggle("error", tipo === "error"); e.classList.toggle("ok", tipo === "ok");
+  e.classList.remove("oculto");
+  if (tipo === "ok") temporizador = setTimeout(() => e.classList.add("oculto"), 3000);
+}
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+async function api(ruta, datos) {
+  const op = { headers: { "X-TVCasa": CLAVE, "Content-Type": "application/json" } };
+  if (datos !== undefined) { op.method = "POST"; op.body = JSON.stringify(datos); }
+  const r = await fetch(ruta, op); const j = await r.json();
+  if (!r.ok) throw new Error(j.error || r.status); return j;
+}
+
+let encontrados = [];
+async function buscarTvs() {
+  $("#busqueda").innerHTML = '<div class="giro"></div> Buscando TV en la red…';
+  try {
+    const { encontrados: ips } = await api("/api/buscar");
+    const conocidos = new Set((await api("/api/tvs")).tvs.map(t => t.ip));
+    encontrados = ips.filter(x => !conocidos.has(x));
+    $("#busqueda").innerHTML = (encontrados.length ? `✓ ${encontrados.length} TV nuevo(s) en la red` : "✓ No hay TV nuevos en la red")
+      + ' · <a href="#" onclick="buscarTvs();return false">buscar otra vez</a>';
+    cargarTvs();
+  } catch (e) { $("#busqueda").textContent = "No se pudo buscar: " + e.message; }
+}
+
+async function cargarTvs() {
+  try {
+    let { tvs, config } = await api("/api/tvs");
+    tvs = tvs.concat(encontrados.filter(x => !tvs.some(t => t.ip === x)).map(x => ({ ip: x, nombre: "" })));
+    $("#c-fondo").value ||= config.carpeta_fondo; $("#c-prot").value ||= config.carpeta_protector;
+    $("#tvs").innerHTML = tvs.length ? tvs.map(t =>
+      `<button class="tv ${t.ip===ip?'activo':''}" onclick="elegir('${esc(t.ip)}')">${esc(t.nombre || "TV sin identificar")}<small>${esc(t.ip)}</small></button>`).join("")
+      : "Todavía no hay TV guardados. Espera la búsqueda o agrega uno por IP.";
+  } catch (e) { $("#tvs").textContent = "Error: " + e.message; }
+}
+
+async function conectar() {
+  const nueva = $("#nueva-ip").value.trim(); if (!nueva) return;
+  try { await api("/api/conectar", { ip: nueva }); await cargarTvs(); elegir(nueva); }
+  catch (e) { alert(e.message); }
+}
+
+let lectura = 0;   // cada clic invalida la lectura anterior (evita barras colgadas por doble clic)
+async function elegir(nuevaIp) {
+  const mia = ++lectura;
+  const vigente = () => mia === lectura;
+  ip = nuevaIp; cargarTvs();
+  $("#acciones").classList.add("oculto");
+  $("#detalle").innerHTML = '<p class="nota">Un momento…</p>';
+  document.querySelectorAll(".tv").forEach(b => b.disabled = true);
+  try {
+    estado(`Conectando con ${ip}…`);
+    try { await api("/api/conectar", { ip }); }
+    catch (e) { if (vigente()) { estado(`No se pudo conectar con ${ip}: ${e.message}`, "error");
+                $("#detalle").innerHTML = '<p class="nota">Revisa que el TV esté encendido y con la depuración de red activa.</p>'; } return; }
+    if (!vigente()) return;
+    estado(`Leyendo el TV ${ip} (modelo, espacio, apps)…`);
+    const t = await correr("info", {}, true);
+    if (!vigente()) return;
+    if (t.estado !== "listo") { estado("No se pudo leer el TV: mira el registro abajo.", "error"); return; }
+    info = t.resultado; perfil = await api("/api/perfil/" + info.perfil);
+    estado(`Preparando la propuesta de limpieza para ${info.perfil_nombre}…`);
+    const pr = await correr("propuesta", {}, true);
+    if (!vigente()) return;
+    if (pr.estado !== "listo") { estado("No se pudo preparar la propuesta: mira el registro abajo.", "error"); return; }
+    propuesta = pr.resultado;
+    pintarDetalle(); pintarListas(); cargarRespaldos(); cargarTvs();
+    $("#acciones").classList.remove("oculto");
+    estado(`✓ Listo: ${info.perfil_nombre}`, "ok");
+  } catch (e) {
+    if (vigente()) estado("Algo falló al leer el TV: " + e.message, "error");
+  } finally {
+    if (vigente()) document.querySelectorAll(".tv").forEach(b => b.disabled = false);
+  }
+}
+
+function pintarDetalle() {
+  const a = info.almacenamiento, mb = x => Math.round(x / 2**20);
+  const p = (k, n) => `<span class="${info.puertos[k] ? 'ok' : 'falla'}">${info.puertos[k] ? '●' : '○'} ${n}</span>`;
+  $("#detalle").innerHTML = `<h2>${esc(info.perfil_nombre)}</h2>
+    <div class="nota">${esc(info.fabricante)} ${esc(info.modelo)} · Android ${esc(info.android)} · parche ${esc(info.parche)} · ${esc(info.ip)}</div>
+    <div class="barra"><i style="width:${a.pct}%"></i></div>
+    <div class="nota">${mb(a.libre)} MB libres de ${mb(a.total)} MB · RAM libre ${info.ram_mb.MemAvailable ?? '?'} MB</div>
+    <div class="chips" style="margin-top:6px">${p('cast','Google Cast')} ${p('control','Control remoto')}
+      <span>Inicio: ${esc(info.inicio.split('/')[0])}</span><span>${info.desactivadas.length} apps desactivadas</span></div>
+    <p class="nota">${esc(perfil.nota)}</p>`;
+  const gtv = info.inicio.startsWith("com.google.android.apps.tv.launcherx") || info.desactivadas.includes("com.google.android.apps.tv.launcherx");
+  $("#nota-lanzador").textContent = gtv
+    ? "Google TV: el inicio de Google queda activo y el servicio 'Botón Inicio' lo reemplaza por el nuevo (sin riesgo de reinicios en bucle). Al encender puede verse un instante el de Google."
+    : "Se instala, se desactiva el inicio original y, si no toma el control, vuelve solo al anterior.";
+  $("#btn-quitar-red").style.display = gtv ? "" : "none";
+}
+
+function pintarListas() {
+  const fila = (c, marcado, extra = "") => `<label><input type="checkbox" value="${esc(c.paquete)}" ${marcado ? 'checked' : ''}>
+      <span>${esc(c.descripcion || c.paquete)} <code>${esc(c.paquete)}</code> <span class="nota">${esc(c.grupo)} · ${esc(extra)}</span></span></label>`;
+  const items = propuesta.items;
+  $("#lista-desactivar").innerHTML = `<p class="nota">Origen: <b>${esc(propuesta.fuente)}</b>. ${items.length} apps activas para revisar; marcadas las más seguras.</p>`
+    + (items.length ? items.map(c => fila(c, c.marcado, c.origen)).join("") : '<p class="nota">Nada pendiente: el TV ya está limpio.</p>');
+  $("#lista-desinstalar").innerHTML = propuesta.desinstalar.length
+    ? propuesta.desinstalar.map(c => fila(c, true, "app de usuario")).join("") : '<p class="nota">Nada pendiente.</p>';
+}
+
+const marcados = sel => [...document.querySelectorAll(sel + " input:checked:not(:disabled)")].map(i => i.value);
+
+async function limpiar() {
+  const p = marcados("#lista-desactivar"); if (!p.length) return alert("No hay nada seleccionado.");
+  if (confirm(`Desactivar ${p.length} apps en ${ip}? (se respalda antes)`)) { await correr("limpieza", { paquetes: p }); elegir(ip); }
+}
+async function desinstalar() {
+  const p = marcados("#lista-desinstalar"); if (!p.length) return;
+  if (confirm(`Desinstalar ${p.join(", ")}?`)) { await correr("desinstalar", { paquetes: p }); elegir(ip); }
+}
+async function lanzador() {
+  const forzar = $("#forzar").checked;
+  if (confirm("Instalar el inicio nuevo y desactivar el original? (se respalda antes)")) { await correr("lanzador", { forzar }); elegir(ip); }
+}
+const fondo = () => correr("fondo", { carpeta: $("#c-fondo").value, minutos: +$("#f-min").value, oscurecer: +$("#f-osc").value, sobrio: $("#f-sobrio").checked });
+const fotos = () => correr("fotos", { carpeta: $("#c-prot").value, segundos: +$("#p-seg").value, minutos: +$("#p-min").value });
+
+async function cargarRespaldos() {
+  const { respaldos } = await api("/api/respaldos/" + ip);
+  $("#respaldos").innerHTML = respaldos.length ? respaldos.map(r => `<label><span style="flex:1"><code>${esc(r.split(/[\\/]/).slice(-1)[0])}</code></span>
+      <button class="b" onclick='restaurar(${JSON.stringify(r)})'>Restaurar</button></label>`).join("") : '<p class="nota">Todavía no hay respaldos.</p>';
+}
+async function restaurar(r) {
+  if (confirm("Volver el TV a este respaldo? Reactiva lo desactivado después y devuelve inicio y protector.")) { await correr("restaurar", { respaldo: r }); elegir(ip); }
+}
+
+async function correr(accion, parametros = {}, silencioso = false) {
+  if (!ip) return;
+  document.querySelectorAll("button.b").forEach(b => b.disabled = true);
+  const { trabajo: id } = await api("/api/accion", { ip, accion, parametros });
+  trabajo = id;
+  if (!silencioso) estado(`Trabajando: ${accion} en ${ip}…`);
+  if (!silencioso) { $("#registro-panel").classList.remove("oculto"); $("#registro-titulo").textContent = "Registro: " + accion; }
+  let t;
+  do { await new Promise(r => setTimeout(r, 1000)); t = await api("/api/trabajo/" + id);
+       if (!silencioso) $("#registro").textContent = t.registro.join("\n") + `\n[${t.estado}]`; }
+  while (t.estado === "corriendo");
+  document.querySelectorAll("button.b").forEach(b => b.disabled = false);
+  if (!silencioso) estado(t.estado === "listo" ? `✓ Listo: ${accion}` : `La acción "${accion}" terminó en: ${t.estado}. Mira el registro.`,
+                         t.estado === "listo" ? "ok" : "error");
+  if (accion === "pruebas" && t.resultado) pintarPruebas(t.resultado);
+  if (accion === "respaldo") cargarRespaldos();
+  if (silencioso && t.estado !== "listo") { $("#registro-panel").classList.remove("oculto"); $("#registro").textContent = t.registro.join("\n"); }
+  return t;
+}
+
+function pintarPruebas(res) {
+  const icono = { ok: "✅", aviso: "⚠️", falla: "❌" };
+  $("#tabla-pruebas").innerHTML = `<table><tr><th>Prueba</th><th></th><th>Detalle</th></tr>${res.pruebas.map(x =>
+    `<tr><td>${esc(x.prueba)}</td><td class="${x.estado}">${icono[x.estado]}</td><td>${esc(x.detalle)}</td></tr>`).join("")}</table>
+    <p class="nota">Informe guardado en tvcasa/datos/informes.</p>`;
+}
+
+async function consultar() {
+  const pregunta = $("#pregunta").value.trim(); if (!pregunta) return;
+  $("#btn-claude").disabled = true; $("#respuesta").classList.remove("oculto"); $("#respuesta").textContent = "Consultando…";
+  try { const { respuesta } = await api("/api/claude", { pregunta, trabajo, contexto: info }); $("#respuesta").textContent = respuesta; }
+  catch (e) { $("#respuesta").textContent = "Error: " + e.message; }
+  $("#btn-claude").disabled = false;
+}
+
+async function elegir_carpeta(sel) {
+  const r = await window.pywebview.api.elegir_carpeta($(sel).value);
+  if (r) $(sel).value = r;
+}
+// "Elegir…" solo existe en la ventana propia (pywebview); en el navegador se escribe la ruta.
+window.addEventListener("pywebviewready", () => document.querySelectorAll(".elegir").forEach(b => b.style.display = ""));
+document.querySelectorAll(".elegir").forEach(b => b.style.display = "none");
+
+$("#tabs").addEventListener("click", e => {
+  const t = e.target.dataset.t; if (!t) return;
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("activo", b.dataset.t === t));
+  document.querySelectorAll("[data-p]").forEach(p => p.classList.toggle("oculto", p.dataset.p !== t));
+});
+cargarTvs();
+buscarTvs();
+</script>
+</body>
+</html>

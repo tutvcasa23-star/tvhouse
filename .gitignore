@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+datos/
+herramientas/platform-tools/
+abrir-tvcasa.cmd
+abrir-tvcasa.command
+TV Casa.lnk
