@@ -75,3 +75,9 @@ Apagar la **depuración de red** en cada TV: mientras está activa, cualquier eq
 Úsala bajo tu propio riesgo. Desactiva apps del sistema (nunca las desinstala) y siempre guarda un respaldo antes,
 pero cada fabricante es distinto. "Consultar a Claude" usa tu propia clave de la API de Anthropic. ADB no viene
 incluido: el instalador lo baja de Google. Licencia MIT (ver `LICENSE`).
+
+## Apoya el proyecto
+
+TV Casa es gratis y de código abierto. Si te ahorró tiempo o dejó tu TV como nuevo, puedes apoyarlo en
+[GitHub Sponsors](https://github.com/sponsors/tutvcasa23-star). Con eso se compran TVs de otras marcas para probar
+y se agregan Samsung y LG.
