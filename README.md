@@ -6,6 +6,14 @@ informe de pruebas. La IA solo se usa si aprietas **"Consultar a Claude"** ante 
 
 Funciona en **Windows y Mac**. Samsung (Tizen), LG (webOS) y otros sistemas: pendiente, ver "Próximos pasos".
 
+![Limpieza de un Sony BRAVIA: propone qué desactivar y marca lo más seguro](docs/img/limpieza.png)
+
+| Al abrir | Informe de pruebas |
+|---|---|
+| ![Bienvenida con los TV de la red](docs/img/bienvenida.png) | ![Pruebas: Cast, control, espacio e inicio](docs/img/pruebas.png) |
+
+*Capturas con datos de ejemplo.*
+
 ## Instalar
 
 1. Python 3.10 o más nuevo ([python.org](https://www.python.org/downloads/)).
